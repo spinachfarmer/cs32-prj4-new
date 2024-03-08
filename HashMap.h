@@ -95,5 +95,6 @@ T& HashMap<T>::operator[](const std::string& key) {
 
 		}
 	}
+	// testing 
 	return &hashTable[hashValue].value;
 }
