@@ -1,0 +1,10 @@
+*
+!.gitignore
+!HashMap.h
+!geodb.h
+!geodb.cpp
+!router.h
+!router.cpp
+!tour_generator.cpp
+!tour_generator.cpp
+!report.txt
