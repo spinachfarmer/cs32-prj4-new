@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="geodb.cpp" />
+    <ClCompile Include="maincpp.cpp" />
     <ClCompile Include="router.cpp" />
     <ClCompile Include="tour_generator.cpp" />
   </ItemGroup>

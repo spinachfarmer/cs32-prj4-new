@@ -68,6 +68,7 @@ void HashMap<T>::insert(const std::string& key, const T& value) {
 template <typename T>
 T* HashMap<T>::find(const std::string& key) {
 	int hashValue = hashFunction(key);
+	list<int>::iterator it;
 	for (it = hashTable[hashValue].begin(); it != hashTable[hashValue].end();) { // iterates through list
 		if (hashTable[hashValue].key == key) { // key already exists inside of hastable
 			return hashTable[hashValue].value;
@@ -83,5 +84,16 @@ T* HashMap<T>::find(const std::string& key) {
 	// reference to the newly created value in the map.
 template <typename T>
 T& HashMap<T>::operator[](const std::string& key) {
+	if (find(key) == nullptr) {
+		hashTable.push_back(key, T());
+	}
+	int hashValue = hashFunction(key);
+	list<int>::iterator it;
+	for (it = hashTable[hashValue].begin(); it != hashTable[hashValue].end();) { // iterates through list
+		if (hashTable[hashValue].key == key) { // key already exists inside of hastable
+			return &hashTable[hashValue].value;
 
+		}
+	}
+	return &hashTable[hashValue].value;
 }
