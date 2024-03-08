@@ -1,3 +1,4 @@
+
 *
 !.gitignore
 !HashMap.h
@@ -6,5 +7,5 @@
 !router.h
 !router.cpp
 !tour_generator.cpp
-!tour_generator.cpp
+!tour_generator.h
 !report.txt
