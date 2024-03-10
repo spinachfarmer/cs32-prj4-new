@@ -1,1 +1,38 @@
-#pragma once
+#ifndef ROUTER_H
+#define ROUTER_H
+
+#include "base_classes.h"
+#include <vector>
+#include "geopoint.h"
+#include <unordered_map>
+#include "geotools.h"
+#include <queue>
+
+using namespace std;
+
+
+class Router : public RouterBase
+{
+
+public:
+	Router(const GeoDatabaseBase& geo_db);
+	virtual ~Router();
+	virtual vector<GeoPoint> route(const GeoPoint& pt1,
+		const GeoPoint& pt2) const;
+private: 
+	const GeoDatabaseBase& gdbb;
+	struct Node {
+		GeoPoint point;  // Current GeoPoint
+		double fScore;   // Estimated total cost from start to goal through this point
+		bool operator>(const Node& other) const { return fScore > other.fScore; }
+	};
+	struct GeoPointHash {
+		size_t hashFunction(const GeoPoint& pt) const {
+			size_t h = hash<string>()(pt.to_string());
+			return h ; // DO I NEED MODULO??
+		}
+	};
+	vector<GeoPoint> getPath(const unordered_map<GeoPoint, GeoPoint, GeoPointHash>& cameFrom,const GeoPoint& start, const GeoPoint& end) const;
+
+};
+#endif

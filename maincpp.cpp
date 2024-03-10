@@ -1,5 +1,7 @@
 #include "HashMap.h"
 #include "geodb.h"
+#include "router.h"
+
 #include <cassert>
 
 int main() {
@@ -86,6 +88,34 @@ int main() {
     GeoPoint p1(a, b), p2(c , d);
 
     cout << g.get_street_name(p1, p2 );
+
+     GeoDatabaseBase* geoDb = new GeoDatabase(); // Or a mock version for testing
+
+    // Populate your geoDb with data here, or ensure your mock returns appropriate values
+
+    // Create a Router instance with your geoDb
+    Router router(*geoDb);
+
+    // Define start and end points for your test
+    GeoPoint start("34.0871665", "-118.4288835"); // Example: Los Angeles
+    GeoPoint end("34.0630614", "-118.4468781"); // Example: New York City
+
+    // Use the router to calculate a route
+    auto path = router.route(start, end);
+
+    // Output the results
+    if (path.empty()) {
+        std::cout << "No path found between the points." << std::endl;
+    }
+    else {
+        std::cout << "Path found:" << std::endl;
+        for (const auto& point : path) {
+            std::cout << point.to_string() << std::endl;
+        }
+    }
+
+    // Clean up if necessary
+    delete geoDb;
    
     cout << "pasased all tests";
 }
