@@ -1,3 +1,7 @@
+
+#ifndef HASHMAP_H
+#define HASHMAP_H
+
 #include <iostream>
 #include <list>
 #include <vector>
@@ -128,3 +132,4 @@ public:
 		return const_cast<T*>(hm.find(key));
 	}
 };
+#endif // HASHMAP_H

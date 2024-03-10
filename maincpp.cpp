@@ -1,4 +1,5 @@
 #include "HashMap.h"
+#include "geodb.h"
 #include <cassert>
 
 int main() {
@@ -20,7 +21,7 @@ int main() {
         *davidsGPA = 3.1; // after a re-grade of David's exam, update 2.99 -> 3.1
     nameToGPA.insert("Carey", 4.0); // Carey deserves a 4.0
     // sees if linda is in the map; if not, creates a new entry for linda in map
-    cout << nameToGPA["Linda"]; // prints zero
+     cout << nameToGPA["Linda"]; // prints zero
 
     HashMap<int> map;
     map.insert("TestKey1", 100);
@@ -57,6 +58,35 @@ int main() {
     /*const int* valDeleted = map.find("TestKey1");
     assert(valDeleted == nullptr);*/
 
+  
+     // tests getpoi location
+    GeoDatabase g;
+    g.load("mapdata.txt"); // assume this works to avoid error checking
+    cout << "sdf";
+    GeoPoint p;
+    if (g.get_poi_location("Diddy Riese", p))
+        cout << "The PoI is at " << p.sLatitude << ", "
+        << p.sLongitude << endl;
+    else
+        cout << "PoI not found!\n";
+    // tests get connected points
+
+    std::vector<GeoPoint> pts = g.get_connected_points(
+        GeoPoint("34.0601422", "-118.4468929"));
+    if (pts.empty())
+        cout << "There are no points connected to your specified point\n";
+    else {
+        for (const auto p : pts)
+            cout << p.sLatitude << ", " << p.sLongitude << endl;
+    }
+    string a = "34.0547000";
+    string b = "-118.4794734";
+        string c = "34.0544590";
+        string d = "-118.4801137";
+    GeoPoint p1(a, b), p2(c , d);
+
+    cout << g.get_street_name(p1, p2 );
+   
     cout << "pasased all tests";
 }
 
