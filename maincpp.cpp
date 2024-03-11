@@ -4,6 +4,24 @@
 
 #include <cassert>
 
+#if defined(_MSC_VER)  &&  !defined(_DEBUG)
+#include <iostream>
+#include <windows.h>
+#include <conio.h>
+
+struct KeepWindowOpenUntilDismissed
+{
+    ~KeepWindowOpenUntilDismissed()
+    {
+        DWORD pids[1];
+        if (GetConsoleProcessList(pids, 1) == 1)
+        {
+            std::cout << "Press any key to close this window . . . ";
+            _getch();
+        }
+    }
+} keepWindowOpenUntilDismissed;
+#endif
 int main() {
 
     // Define a hashmap that maps strings to doubles and has a maximum
@@ -73,32 +91,31 @@ int main() {
         cout << "PoI not found!\n";
     // tests get connected points
 
-    std::vector<GeoPoint> pts = g.get_connected_points(
-        GeoPoint("34.0601422", "-118.4468929"));
-    if (pts.empty())
+    std::vector<GeoPoint> pts = g.get_connected_points( GeoPoint("34.0871665", "-118.4288835"));
+   /* if (pts.empty())
         cout << "There are no points connected to your specified point\n";
     else {
         for (const auto p : pts)
             cout << p.sLatitude << ", " << p.sLongitude << endl;
-    }
+    }*/
     string a = "34.0547000";
     string b = "-118.4794734";
         string c = "34.0544590";
         string d = "-118.4801137";
     GeoPoint p1(a, b), p2(c , d);
 
-    cout << g.get_street_name(p1, p2 );
+    cout << g.get_street_name(p1, p2 ) << endl;
 
      GeoDatabaseBase* geoDb = new GeoDatabase(); // Or a mock version for testing
 
     // Populate your geoDb with data here, or ensure your mock returns appropriate values
 
     // Create a Router instance with your geoDb
-    Router router(*geoDb);
+    Router router(g);
 
     // Define start and end points for your test
-    GeoPoint start("34.0871665", "-118.4288835"); // Example: Los Angeles
-    GeoPoint end("34.0630614", "-118.4468781"); // Example: New York City
+    GeoPoint start("34.0871665", "-118.4288835"); 
+    GeoPoint end("34.0630614", "-118.4468781"); 
 
     // Use the router to calculate a route
     auto path = router.route(start, end);
