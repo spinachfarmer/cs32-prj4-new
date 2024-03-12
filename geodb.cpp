@@ -56,6 +56,8 @@ bool GeoDatabase::load(const std::string& map_data_file) {
 					connections[end.to_string()].push_back(mid);
 					connections[mid.to_string()].push_back(pCoord);
 					connections[pCoord.to_string()].push_back(mid);
+					connections[start.to_string()].push_back(end);
+					connections[end.to_string()].push_back(start);
 				}
 			}
 			else {
