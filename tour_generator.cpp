@@ -33,7 +33,7 @@ vector<TourCommand> TourGenerator::generate_tour(Stops& stops) {
 			string nextPoi, nextTalkingPoint;
 			stops.get_poi_data(i + 1, nextPoi, nextTalkingPoint);
 			GeoPoint currentP, nextP;
-			if (!m_geodb.get_poi_location(poi, currentP) || !m_geodb.get_poi_location(poi, nextP)) {
+			if (!m_geodb.get_poi_location(poi, currentP) || !m_geodb.get_poi_location(nextPoi, nextP)) {
 				// Handle unknown point of interest location
 				return {};
 			}
@@ -42,29 +42,33 @@ vector<TourCommand> TourGenerator::generate_tour(Stops& stops) {
 				return {};
 			}
 
-			for (int j = 0; i < path.size() - 1; j++) {
+			for (int j = 0; j < path.size() - 1; j++) {
 				GeoPoint p1 = path[j];
 				GeoPoint p2 = path[j + 1];
 
 				double  distance = distance_earth_miles(p1, p2);
 				string direction = getDirection(p1, p2);
 				string streetName = m_geodb.get_street_name(p1, p2);
-
+				
 				TourCommand proceed;
 				proceed.init_proceed(direction, streetName, distance, p1, p2);
 				result.push_back(proceed);
+
 				if (j < path.size() - 2) {
 					GeoPoint p3 = path[j + 2];
-					if (m_geodb.get_street_name(p2, p3) != streetName) {
-						double angle = angle_of_turn(p1, p2, p3);
+					double angle = angle_of_turn(p1, p2, p3);
+					if (m_geodb.get_street_name(p2, p3) != streetName && angle > 1 && angle <= 359) { // streetname differs
 						string turnD;
+
 						if (angle >= 180 && angle <= 360) {
 							turnD = "right";
 						}
 						else if( angle >=1 && angle < 180){
 							turnD = "left";
 						}
-
+						if (getDirection(path[j], path[j + 1]) == getDirection(path[j + 1], path[j + 2]))
+							continue;
+						streetName = m_geodb.get_street_name(p2, p3);
 						TourCommand turn;
 						turn.init_turn(turnD, streetName);
 						result.push_back(turn);

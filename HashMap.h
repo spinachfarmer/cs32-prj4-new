@@ -59,6 +59,7 @@ private:
 
 		hashTable.swap(newTable);
 		m_nbuckets = newSize;
+	
 	}
 
 
@@ -69,7 +70,7 @@ public:
 
 	~HashMap() {} // destructor; deletes all of the items in the hashmap
 	int size() const {// return the number of associations in the hashmap
-		return m_nbuckets;
+		return nnodes;
 	}
 
 

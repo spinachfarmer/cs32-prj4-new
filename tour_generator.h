@@ -1,5 +1,5 @@
-#ifndef ROUTER_H
-#define ROUTER_H
+#ifndef TOUR
+#define TOUR
 
 #include "base_classes.h"
 #include <vector>

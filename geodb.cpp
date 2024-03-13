@@ -26,7 +26,7 @@ bool GeoDatabase::load(const std::string& map_data_file) {
 			poiCount = stoi(line);
 			
 			GeoPoint start(latS, longS), end(latE, longE);
-			StreetSegment temp{ start, end, streetName };
+			
 			string segAddress = start.to_string() + "," + end.to_string(); // key for street seg map[
 			
 		
@@ -40,15 +40,33 @@ bool GeoDatabase::load(const std::string& map_data_file) {
 					getline(file, line);
 					string poiLong = line;
 					GeoPoint pCoord(poiLat, poiLong);
-					Poi poi{ pCoord, streetName };
+					Poi poi;
+					poi.location = pCoord;
+					poi.streetName = streetName;
 					Pois.insert(poiName, poi);
 
 					// midpoint stuff
 					GeoPoint mid = midpoint(start, end);
-					StreetSegment AM{ start, mid, streetName }, MB{ mid, end, streetName }, MP{ mid, pCoord, "a path" };
+					StreetSegment AM, MB, MP;
+
+					AM.start = start;
+					AM.end = mid;
+					AM.streetName = streetName;
+
+					MB.start = mid;
+					MB.end = end;
+					MB.streetName = streetName;
+
+					MP.start = mid;
+					MP.end = pCoord;
+					MP.streetName = "a path";
+					segAddress = start.to_string() + "," + mid.to_string();
 					StreetSegments.insert(segAddress, AM);
+					segAddress = mid.to_string() + "," + end.to_string();
 					StreetSegments.insert(segAddress, MB);
-					StreetSegments.insert("a path", MP);
+					segAddress = mid.to_string() + "," + pCoord.to_string();
+					StreetSegments.insert(segAddress, MP);
+					
 
 					connections[start.to_string()].push_back(mid); 
 					connections[mid.to_string()].push_back(start);
@@ -60,11 +78,16 @@ bool GeoDatabase::load(const std::string& map_data_file) {
 					connections[end.to_string()].push_back(start);
 				}
 			}
-			else {
+		
+				StreetSegment temp;
+				temp.start = start;
+				temp.end = end;
+				temp.streetName = streetName;
+				segAddress = start.to_string() + "," + end.to_string();
 				StreetSegments.insert(segAddress, temp);    // puts streeg seg into hashmap
 				connections[start.to_string()].push_back(end);
 				connections[end.to_string()].push_back(start);
-			}
+			
 		}
 	}
 
@@ -97,10 +120,14 @@ string GeoDatabase::get_street_name(const GeoPoint& pt1, const GeoPoint& pt2) co
 
 	string segAddress = pt1.to_string() +  "," + pt2.to_string();
 	const StreetSegment* ssPointer = StreetSegments.find(segAddress);
+	string segAddressB = pt2.to_string() + "," + pt1.to_string();
 	if (ssPointer != nullptr) {
 		return ssPointer->streetName;
 	}
 	else {
+		const StreetSegment* ssPointerB = StreetSegments.find(segAddressB);
+		if(ssPointerB != nullptr)
+			return ssPointerB->streetName;
 		return "";
 	}
 }
