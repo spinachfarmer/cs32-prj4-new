@@ -1,0 +1,9 @@
+
+
+If there are n lines in the mapdata.txt file and there are p pois the Big-o of load() would be O(N)
+
+The Big O for get_connected_points() is O(N) assuming there are n elements in the bucket its searchign through.
+
+The Big O for get_street_name() is O(N) assuming there are n elements in the bucket its searchign through.
+
+In route() I implemented A* with a priority queue to rank the points by their scores and two additional unorderded hashmaps to store the gscore and fscore and another unordered map to keep track of where the points came from.
